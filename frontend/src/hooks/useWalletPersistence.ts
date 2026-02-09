@@ -7,6 +7,7 @@ import {
   isConnectionStale,
   validateWalletAddress,
 } from '../lib/wallet-state';
+import { getUserPreferences } from '../lib/preferences';
 
 /**
  * Hook to persist Ethereum wallet connection state
@@ -43,6 +44,10 @@ export function useWalletPersistence() {
     const restoreConnection = async () => {
       // Don't restore if already connected
       if (isConnected) return;
+
+      // Check if auto-connect is enabled
+      const { autoConnectWallet } = getUserPreferences();
+      if (!autoConnectWallet) return;
 
       const savedState = getWalletConnection();
       

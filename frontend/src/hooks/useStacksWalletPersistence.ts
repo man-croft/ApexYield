@@ -6,6 +6,7 @@ import {
   isConnectionStale,
   validateWalletAddress,
 } from '../lib/wallet-state';
+import { getUserPreferences } from '../lib/preferences';
 
 interface StacksWalletHookParams {
   address?: string;
@@ -49,6 +50,10 @@ export function useStacksWalletPersistence({
     const restoreConnection = async () => {
       // Don't restore if already connected or no connect function
       if (isConnected || !connect) return;
+
+      // Check if auto-connect is enabled
+      const { autoConnectWallet } = getUserPreferences();
+      if (!autoConnectWallet) return;
 
       const savedState = getStacksWalletConnection();
       
